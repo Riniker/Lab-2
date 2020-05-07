@@ -3,19 +3,87 @@
 
 #include "pch.h"
 #include <iostream>
+#include <list>
+#include <algorithm>
+#include <set>
+#include <map>
+#include <random>
+#include <iterator> 
+
+
+#define N 100
+
+using namespace std;
+
+random_device rd;
+mt19937 gen(rd());
+uniform_int_distribution<> dist(1, N);
+uniform_real_distribution<> distR(1, N);
+
+void CreateSet(set<int> *_set, int size)
+{
+	int a;
+
+	for (int i = 0; i < size; i++)
+	{
+		 a = dist(gen);
+		_set->insert(a);
+	}
+};
+
+
+void CreateMap(map<int, double> *_map, int size)
+{
+	int a;
+	double b;
+
+	for (int i = 0; i < size; i++)
+	{
+		a = dist(gen);
+		b = distR(gen);
+		_map->insert(pair<int, double>(b, a));
+	}
+};
 
 int main()
 {
-    std::cout << "Hello World!\n"; 
+	ostream_iterator<int> ositer(cout, ", ");
+
+	set<int> dSet;
+	map <int, double> strMap;
+
+	CreateSet(&dSet, 10);
+
+	copy(dSet.begin(), dSet.end(), ositer);
+
+	cout << endl << "Value of element to remove: ";
+	int num;
+	cin >> num;
+	if (dSet.find(num) != dSet.end())
+	{
+		dSet.erase(num);
+	}
+	else
+		cout << endl << "There is no it in set";
+	copy(dSet.begin(), dSet.end(), ositer);
+	cout << endl<< endl;
+
+	CreateMap(&strMap, 10);
+	map <int, double> ::iterator it = strMap.begin();
+	for (int i = 0; it != strMap.end(); it++, i++)
+		cout << it->first << " : " << it->second << endl;
+
+	cout << endl << "Key of element to remove: ";
+	cin >> num;
+	it = strMap.find(num);
+	if (it != strMap.end())
+	{
+		strMap.erase(it);
+		it = strMap.begin();
+		for (int i = 0 ; it != strMap.end(); it++, i++)
+			cout << it->first << " : " << it->second << endl;
+	}
+	else
+		cout << endl << "There is no it in map";
 }
 
-// Запуск программы: CTRL+F5 или меню "Отладка" > "Запуск без отладки"
-// Отладка программы: F5 или меню "Отладка" > "Запустить отладку"
-
-// Советы по началу работы 
-//   1. В окне обозревателя решений можно добавлять файлы и управлять ими.
-//   2. В окне Team Explorer можно подключиться к системе управления версиями.
-//   3. В окне "Выходные данные" можно просматривать выходные данные сборки и другие сообщения.
-//   4. В окне "Список ошибок" можно просматривать ошибки.
-//   5. Последовательно выберите пункты меню "Проект" > "Добавить новый элемент", чтобы создать файлы кода, или "Проект" > "Добавить существующий элемент", чтобы добавить в проект существующие файлы кода.
-//   6. Чтобы снова открыть этот проект позже, выберите пункты меню "Файл" > "Открыть" > "Проект" и выберите SLN-файл.

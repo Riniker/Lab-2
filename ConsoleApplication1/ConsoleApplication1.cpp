@@ -3,13 +3,11 @@
 
 #include "pch.h"
 #include <iostream>
-#include <list>
-#include <algorithm>
 #include <set>
 #include <map>
 #include <random>
 #include <iterator> 
-
+#include <algorithm>
 
 #define N 100
 
@@ -45,6 +43,43 @@ void CreateMap(map<int, double> *_map, int size)
 	}
 };
 
+void IncreaseByFirst(set<int> *_set)
+{
+	set<int>::iterator iter = _set->begin();
+	set<int> set;
+	int fEl = *iter;
+	set.insert(*iter);
+	iter++;
+	for (int i = 1; i < _set->size(); i++, iter++)
+	{
+		set.insert(*iter + fEl);
+	}
+	_set->clear();
+	_set->swap(set);
+}
+
+void ReplaceByFirst(map<int, double> *_map)
+{
+	map<int, double>::iterator iter = _map->begin();
+	map<int, double>::iterator iter2 = _map->begin();
+	int first = iter->second;
+	iter++;
+	for (int i = 1; i < _map->size(); i++, iter++)
+	{
+		if (iter2->second < iter->second)
+		{
+			 iter2 = iter;
+		}
+	}
+	cout << "Biggest: " << iter2->first << " : " << iter2->second << endl;
+	iter2->second = first;
+}
+
+bool compare(int a, int b)
+{
+	return (a < b);
+}
+
 int main()
 {
 	ostream_iterator<int> ositer(cout, ", ");
@@ -53,6 +88,9 @@ int main()
 	map <int, double> strMap;
 
 	CreateSet(&dSet, 10);
+
+	set<int>::iterator iter = dSet.begin();
+
 
 	copy(dSet.begin(), dSet.end(), ositer);
 
@@ -64,26 +102,37 @@ int main()
 		dSet.erase(num);
 	}
 	else
-		cout << endl << "There is no it in set";
+		cout << endl << "There is no it in set" << endl;
 	copy(dSet.begin(), dSet.end(), ositer);
-	cout << endl<< endl;
+	iter = dSet.begin();
+	cout << endl << "Number of element to remove: ";
+	cin >> num;
+	if (dSet.size() + 1 > num)
+	{
+		for (int i = 0; i < num - 1; i++)
+			iter++;
+		num = *iter;
+		dSet.erase(num);
+		copy(dSet.begin(), dSet.end(), ositer);
+	}
+	else cout << "Your number is too big";
+
+	IncreaseByFirst(&dSet);
+	cout << endl << "Increased" << endl;
+	copy(dSet.begin(), dSet.end(), ositer);
+	cout << endl << endl;
 
 	CreateMap(&strMap, 10);
 	map <int, double> ::iterator it = strMap.begin();
 	for (int i = 0; it != strMap.end(); it++, i++)
 		cout << it->first << " : " << it->second << endl;
 
-	cout << endl << "Key of element to remove: ";
-	cin >> num;
-	it = strMap.find(num);
-	if (it != strMap.end())
-	{
-		strMap.erase(it);
-		it = strMap.begin();
-		for (int i = 0 ; it != strMap.end(); it++, i++)
-			cout << it->first << " : " << it->second << endl;
-	}
-	else
-		cout << endl << "There is no it in map";
+	ReplaceByFirst(&strMap);
+
+	cout << "Replaced" << endl;
+	it = strMap.begin();
+	for (int i = 0; it != strMap.end(); it++, i++)
+		cout << it->first << " : " << it->second << endl;
+
 }
 
